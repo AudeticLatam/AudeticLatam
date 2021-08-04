@@ -19,7 +19,6 @@ from scrapy import Selector
 import pandas as pd
 import numpy as np
 
-#nltk.download('punkt')
 nltk.download('stopwords') #Descargas de stopwords en español
 udpipe.download('es') #Descarga modelo de PLN
 nlp_model_es = udpipe.load('es') #Carga de modelo PLN
@@ -115,7 +114,6 @@ def normalize(s):
 
 nombres_apellidos = []
 tokens = []
-lista = []
 
 for t in word_tokenize_clean(normalize(contents), ['everyone', 'from']):
     valor = lematiza(t)
@@ -125,3 +123,13 @@ for t in word_tokenize_clean(normalize(contents), ['everyone', 'from']):
 for token in nlp_model_es(np.unique(np.array(tokens)).tolist()):
     if token.pos_ in ['NOUN', 'PROPN']:
         nombres_apellidos.append(token.text)
+
+#Busca todas las ceculas validas en el texto
+for c in EncuentraCedula(contents):
+    print("La cedula {} es {}".format(c, ValidaCedula(c)))
+#Busca todos los emails en el texto
+print(EncuentraEmail(contents))
+#Muestra todas las palabras unicas extraidas del texto
+print(tokens)
+#Muestras todas las palabras que el modelo PLN haya identificado como Pronombres Personales o sustantivos
+print(nombres_apellidos)
